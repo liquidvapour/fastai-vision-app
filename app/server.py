@@ -9,7 +9,7 @@ import base64
 
 model_file_url = 'https://github.com/pankymathur/Fine-Grained-Clothing-Classification/blob/master/data/cloth_categories/models/stage-1_sz-150.pth?raw=true'
 model_file_name = 'model'
-classes = ['Blouse', 'Blazer', 'Button-Down', 'Bomber', 'Anorak', 'Tee', 'Tank', 'Top', 'Sweater', 'Flannel', 'Hoodie', 'Cardigan', 'Jacket', 'Henley', 'Poncho', 'Jersey', 'Turtleneck', 'Parka', 'Peacoat', 'Halter', 'Skirt', 'Shorts', 'Jeans', 'Joggers', 'Sweatpants', 'Jeggings', 'Cutoffs', 'Sweatshorts', 'Leggings', 'Culottes', 'Chinos', 'Trunks', 'Sarong', 'Gauchos', 'Jodhpurs', 'Capris', 'Dress', 'Romper', 'Coat', 'Kimono', 'Jumpsuit', 'Robe', 'Caftan', 'Kaftan', 'Coverup', 'Onesie']
+classes = ['black','grizzly','teddys']
 
 path = Path(__file__).parent
 
@@ -26,9 +26,15 @@ async def download_file(url, dest):
 
 async def setup_learner():
     await download_file(model_file_url, path/'models'/f'{model_file_name}.pth')
-    data_bunch = ImageDataBunch.single_from_classes(path, classes, tfms=get_transforms(), size=150).normalize(imagenet_stats)
+    data_bunch = ImageDataBunch.single_from_classes(path, classes, ds_tfms=get_transforms(), size=224).normalize(imagenet_stats)
     learn = create_cnn(data_bunch, models.resnet34, pretrained=False)
     learn.load(model_file_name)
+
+# ---Use export file ---   
+#    modelPath = path/'models'
+#    print(modelPath)
+#    learn = load_learner(modelPath)
+# ----------------------
     return learn
 
 loop = asyncio.get_event_loop()
@@ -41,7 +47,7 @@ PREDICTION_FILE_SRC = path/'static'/'predictions.txt'
 @app.route("/upload", methods=["POST"])
 async def upload(request):
     data = await request.form()
-    img_bytes = await (data["img"].read())
+    img_bytes = data["img"]
     bytes = base64.b64decode(img_bytes)
     return predict_from_bytes(bytes)
 

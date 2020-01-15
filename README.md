@@ -17,3 +17,25 @@ Few dockers hosted services where this starter pack will work =>
 * https://aws.amazon.com/ecs/
 * https://cloud.google.com/cloud-build/docs/
 * https://www.digitalocean.com/products/one-click-apps/docker/
+
+
+## Useful commands
+
+```
+docker build .
+```
+
+build the container
+
+
+```
+docker run -p 8080:8080 -it [IMAGE] /bin/bash
+```
+
+Start container in interactive mode
+
+```
+docker run -p 8080:8080  -v d:\users\ra-el\Source\fastai\fastai-vision-app\app:/app -it f10c /bin/bash
+```
+
+Share the code from the host
