@@ -5,3 +5,4 @@ uvicorn
 python-multipart
 aiofiles
 aiohttp
+pillow==6.2.1
